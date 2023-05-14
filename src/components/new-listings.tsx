@@ -43,7 +43,7 @@ const PoolElement: FC<PoolElementProps> = ({ pool, token0, token1 }) => {
   const { data: dataPair, isLoading: isLoadingPair } = usePairInfo(pool)
 
   if (isLoadingPair) {
-    return <Skeleton height="280px" width="320px" radius="sm" />
+    return <Skeleton width="160px" height="80px" radius="sm" />
   }
 
   if (dataPair != null && dataPair.pair == null) return null
@@ -85,7 +85,7 @@ export const NewListings = () => {
     <div className="grid grid-cols-2 gap-3 place-content-around lg:grid-cols-5 md:grid-cols-3">
       {isLoading && <Skeleton height="280px" width="320px" radius="sm" />}
       {isFetched &&
-        data!.map((pool) => (
+        data!.logs.map((pool) => (
           <PoolElement
             {...pool.args}
             blockNumber={pool.blockNumber}

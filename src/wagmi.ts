@@ -4,6 +4,7 @@ import { InjectedConnector } from 'wagmi/connectors/injected'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 
 import { rpcs } from './arbitrum'
+import { getRandomElement } from './utils/random.util'
 
 const arbitrumCustom: Chain = {
   ...arbitrum,
@@ -22,7 +23,7 @@ const { chains, publicClient } = configureChains(
   [arbitrumCustom],
   [
     jsonRpcProvider({
-      rpc: (chain) => ({ http: chain.rpcUrls.default.http[7] }),
+      rpc: (chain) => ({ http: getRandomElement(chain.rpcUrls.default.http)! }),
     }),
   ],
 )

@@ -95,7 +95,10 @@ const getEvents = async (client: PublicClient, currentBlock: bigint) => {
   // cool. now store currentBlock in localStorage, so we can use it next time
   storeLastBlockByChainId(arbitrum.id, currentBlock)
 
-  return allLogs
+  return {
+    logs: allLogs,
+    blockNumber: currentBlock,
+  }
 }
 
 export const useFactoryPoolCreated = () => {
@@ -106,5 +109,6 @@ export const useFactoryPoolCreated = () => {
     queryKey: ['factory-pools'],
     queryFn: async () => await getEvents(client, blockNumber!),
     enabled: blockNumber != null,
+    staleTime: 1000 * 60 * 10, // 10 minutes
   })
 }
