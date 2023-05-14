@@ -1,10 +1,7 @@
 import { MantineProvider } from '@mantine/core'
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import {
-  persistQueryClient,
-  removeOldestQuery,
-} from '@tanstack/react-query-persist-client'
+import { persistQueryClient } from '@tanstack/react-query-persist-client'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { WagmiConfig } from 'wagmi'
@@ -24,7 +21,6 @@ const queryClient = new QueryClient({
 // persist cache only in client mode, that's good enough for now
 const localStoragePersister = createSyncStoragePersister({
   storage: window.localStorage,
-  retry: removeOldestQuery,
 })
 
 persistQueryClient({

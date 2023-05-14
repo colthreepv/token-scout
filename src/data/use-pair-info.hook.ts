@@ -22,11 +22,9 @@ export const fetchPairData = async (
 }
 
 export const usePairInfo = (poolAddress: Address) => {
-  return useQuery(
-    ['pairInfo', poolAddress],
-    async () => await fetchPairData([poolAddress]),
-    {
-      staleTime: 1000 * 60 * 10, // 10 minutes
-    },
-  )
+  return useQuery({
+    queryKey: ['pair-info', poolAddress],
+    queryFn: async () => await fetchPairData([poolAddress]),
+    staleTime: 1000 * 60 * 10, // 10 minutes
+  })
 }
