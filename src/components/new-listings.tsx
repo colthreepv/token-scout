@@ -1,4 +1,5 @@
 import { Anchor, Skeleton, Text } from '@mantine/core'
+import { format } from 'numerable'
 import { type FC } from 'react'
 import { type Address, useToken } from 'wagmi'
 import { arbitrum } from 'wagmi/chains'
@@ -33,11 +34,24 @@ interface PoolElementProps {
   tickSpacing: number
   token0: Address
   token1: Address
-  blockNumber: bigint | null
+  blockNumber: number | null
 }
+
+const LIQUIDITY_THRESHOLD = 5_000
 
 const PoolElement: FC<PoolElementProps> = ({ pool, token0, token1 }) => {
   const { data: dataPair, isLoading: isLoadingPair } = usePairInfo(pool)
+
+  if (isLoadingPair) {
+    return <Skeleton height="280px" width="320px" radius="sm" />
+  }
+
+  if (dataPair != null && dataPair.pair == null) return null
+  if (
+    dataPair?.pair?.liquidity?.usd != null &&
+    dataPair?.pair?.liquidity?.usd < LIQUIDITY_THRESHOLD
+  )
+    return null
 
   return (
     <div className="flex flex-col gap-2 p-2 bg-gray-600 rounded-md">
@@ -54,7 +68,9 @@ const PoolElement: FC<PoolElementProps> = ({ pool, token0, token1 }) => {
         >
           <img src={dexScreener} width="24" height="24" />
         </Anchor>
-        {dataPair != null && <div>Mktcap: {dataPair.pair?.liquidity.usd}</div>}
+        {dataPair != null && (
+          <div>Liquidity: {format(dataPair.pair?.liquidity.usd, '0.00a')}</div>
+        )}
       </div>
     </div>
   )
@@ -70,9 +86,11 @@ export const NewListings = () => {
       {isLoading && <Skeleton height="280px" width="320px" radius="sm" />}
       {isFetched &&
         data!.map((pool) => (
-          <div key={pool.transactionHash}>
-            <PoolElement {...pool.args} blockNumber={pool.blockNumber} />
-          </div>
+          <PoolElement
+            {...pool.args}
+            blockNumber={pool.blockNumber}
+            key={pool.transactionHash}
+          />
         ))}
     </div>
   )

@@ -6615,6 +6615,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"numerable@npm:^0.3.15":
+  version: 0.3.15
+  resolution: "numerable@npm:0.3.15"
+  checksum: 09313891a73097175bcac082ac57031b294ede9aebb469a43a985a2642f4db14e35234c82da68fc8c04bc93873c342e72c459e26996d027aecd5d978837cdca3
+  languageName: node
+  linkType: hard
+
 "object-assign@npm:^4.0.1":
   version: 4.1.1
   resolution: "object-assign@npm:4.1.1"
@@ -6791,23 +6798,6 @@ __metadata:
   dependencies:
     aggregate-error: ^3.0.0
   checksum: cb0ab21ec0f32ddffd31dfc250e3afa61e103ef43d957cc45497afe37513634589316de4eb88abdfd969fe6410c22c0b93ab24328833b8eb1ccc087fc0442a1c
-  languageName: node
-  linkType: hard
-
-"p-queue@npm:^7.3.4":
-  version: 7.3.4
-  resolution: "p-queue@npm:7.3.4"
-  dependencies:
-    eventemitter3: ^4.0.7
-    p-timeout: ^5.0.2
-  checksum: a21b8a4dd75f64a4988e4468cc344d1b45132506ddd2c771932d3de446d108ee68713b629e0d3f0809c227bc10eafc613edde6ae741d9f60db89b6031e40921c
-  languageName: node
-  linkType: hard
-
-"p-timeout@npm:^5.0.2":
-  version: 5.1.0
-  resolution: "p-timeout@npm:5.1.0"
-  checksum: f5cd4e17301ff1ff1d8dbf2817df0ad88c6bba99349fc24d8d181827176ad4f8aca649190b8a5b1a428dfd6ddc091af4606835d3e0cb0656e04045da5c9e270c
   languageName: node
   linkType: hard
 
@@ -8115,7 +8105,7 @@ __metadata:
     eslint-plugin-promise: ^6.0.0
     eslint-plugin-react-hooks: ^4.6.0
     eslint-plugin-react-refresh: ^0.3.4
-    p-queue: ^7.3.4
+    numerable: ^0.3.15
     postcss: ^8.4.23
     prettier: ^2.8.8
     react: ^18.2.0
