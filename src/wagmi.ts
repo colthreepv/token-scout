@@ -1,9 +1,9 @@
-import { configureChains, createConfig, Chain } from 'wagmi'
 import { arbitrum } from '@wagmi/chains'
+import { type Chain, configureChains, createConfig } from 'wagmi'
+import { InjectedConnector } from 'wagmi/connectors/injected'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 
-import networks from './networks.json'
-import { InjectedConnector } from 'wagmi/connectors/injected'
+import networks from './networks'
 
 const arbitrumCustom: Chain = {
   ...arbitrum,
@@ -14,20 +14,21 @@ const arbitrumCustom: Chain = {
     },
     public: {
       http: networks,
-    }
-  }
+    },
+  },
 }
 
 const { chains, publicClient } = configureChains(
   [arbitrumCustom],
-  [jsonRpcProvider({ rpc: (chain) => ({ http: chain.rpcUrls.default.http[0] }) })],
-  { rank: true }
+  [
+    jsonRpcProvider({
+      rpc: (chain) => ({ http: chain.rpcUrls.default.http[7] }),
+    }),
+  ],
 )
 
 export const config = createConfig({
   autoConnect: true,
   publicClient,
-  connectors: [
-    new InjectedConnector({ chains })
-  ]
+  connectors: [new InjectedConnector({ chains })],
 })

@@ -20,6 +20,6 @@
     "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/no-misused-promises": ["error", {"checksVoidReturn": false}]
   },
-  "ignorePatterns": ["node_modules", "vite.config.ts"],
+  "ignorePatterns": ["node_modules", "vite.config.ts", "contracts.ts"],
   "root": true
 }
