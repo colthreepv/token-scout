@@ -1,7 +1,8 @@
 import { MantineProvider } from '@mantine/core'
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { persistQueryClient } from '@tanstack/react-query-persist-client'
+import { QueryClient } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { WagmiConfig } from 'wagmi'
@@ -13,19 +14,14 @@ import { config } from './wagmi.ts'
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      cacheTime: 10 * 60, // 10 minutes
+      cacheTime: 1000 * 60 * 60 * 24, // 24 hours
     },
   },
 })
 
 // persist cache only in client mode, that's good enough for now
-const localStoragePersister = createSyncStoragePersister({
+const persister = createSyncStoragePersister({
   storage: window.localStorage,
-})
-
-persistQueryClient({
-  queryClient,
-  persister: localStoragePersister,
 })
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
@@ -35,11 +31,14 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       withNormalizeCSS
       theme={{ colorScheme: 'dark' }}
     >
-      <QueryClientProvider client={queryClient}>
-        <WagmiConfig config={config}>
+      <WagmiConfig config={config}>
+        <PersistQueryClientProvider
+          client={queryClient}
+          persistOptions={{ persister }}
+        >
           <App />
-        </WagmiConfig>
-      </QueryClientProvider>
+        </PersistQueryClientProvider>
+      </WagmiConfig>
     </MantineProvider>
   </React.StrictMode>,
 )

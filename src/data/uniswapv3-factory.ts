@@ -98,6 +98,7 @@ const getEvents = async (client: PublicClient, currentBlock: bigint) => {
   return {
     logs: allLogs,
     blockNumber: currentBlock,
+    chainId: client.chain.id,
   }
 }
 

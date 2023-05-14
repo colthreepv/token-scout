@@ -2,7 +2,7 @@ import { Anchor, Skeleton, Text } from '@mantine/core'
 import { format } from 'numerable'
 import { type FC } from 'react'
 import { type Address, useToken } from 'wagmi'
-import { arbitrum } from 'wagmi/chains'
+import { arbitrum, bsc } from 'wagmi/chains'
 
 import dexScreener from '@/assets/dexscreener.svg'
 import { useFactoryPoolCreated } from '@/data/uniswapv3-factory'
@@ -28,18 +28,30 @@ const TokenElement: FC<{ address: Address }> = ({ address }) => {
   )
 }
 
+const chainIcons = new Map<number, string>([
+  [arbitrum.id, 'https://dd.dexscreener.com/ds-data/chains/arbitrum.png'],
+  [bsc.id, 'https://dd.dexscreener.com/ds-data/chains/bsc.png'],
+])
+
 interface PoolElementProps {
   fee: number
   pool: Address
   tickSpacing: number
   token0: Address
   token1: Address
+
   blockNumber: number | null
+  chainId: number | null
 }
 
 const LIQUIDITY_THRESHOLD = 5_000
 
-const PoolElement: FC<PoolElementProps> = ({ pool, token0, token1 }) => {
+const PoolElement: FC<PoolElementProps> = ({
+  pool,
+  token0,
+  token1,
+  chainId,
+}) => {
   const { data: dataPair, isLoading: isLoadingPair } = usePairInfo(pool)
 
   if (isLoadingPair) {
@@ -72,23 +84,36 @@ const PoolElement: FC<PoolElementProps> = ({ pool, token0, token1 }) => {
           <div>Liquidity: {format(dataPair.pair?.liquidity.usd, '0.00a')}</div>
         )}
       </div>
+
+      {chainId != null && (
+        <div className="flex justify-end">
+          <img src={chainIcons.get(chainId)} height="24px" width="24px" />
+        </div>
+      )}
     </div>
   )
 }
-
-interface NewListingsProps {}
 
 export const NewListings = () => {
   const { data, isLoading, isFetched } = useFactoryPoolCreated()
 
   return (
     <div className="grid grid-cols-2 gap-3 place-content-around lg:grid-cols-5 md:grid-cols-3">
-      {isLoading && <Skeleton height="280px" width="320px" radius="sm" />}
+      {isLoading && (
+        <>
+          <Skeleton width="160px" height="80px" radius="sm" />
+          <Skeleton width="160px" height="80px" radius="sm" />
+          <Skeleton width="160px" height="80px" radius="sm" />
+          <Skeleton width="160px" height="80px" radius="sm" />
+          <Skeleton width="160px" height="80px" radius="sm" />
+        </>
+      )}
       {isFetched &&
         data!.logs.map((pool) => (
           <PoolElement
             {...pool.args}
             blockNumber={pool.blockNumber}
+            chainId={data!.chainId}
             key={pool.transactionHash}
           />
         ))}
