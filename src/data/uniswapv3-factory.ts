@@ -97,12 +97,12 @@ const getEvents = async (client: PublicClient, currentBlock: bigint) => {
 
   return {
     logs: allLogs,
-    blockNumber: currentBlock,
+    blockNumber: Number(currentBlock),
     chainId: client.chain.id,
   }
 }
 
-export const useFactoryPoolCreated = () => {
+export const useFactoryPoolCreated = (chainId: number) => {
   const client = usePublicClient()
   const { data: blockNumber } = useBlockNumber()
 

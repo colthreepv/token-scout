@@ -37,6 +37,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
           persistOptions={{ persister }}
         >
           <App />
+          <ReactQueryDevtools initialIsOpen={false} />
         </PersistQueryClientProvider>
       </WagmiConfig>
     </MantineProvider>
