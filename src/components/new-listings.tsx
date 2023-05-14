@@ -5,6 +5,7 @@ import { arbitrum } from 'wagmi/chains'
 
 import dexScreener from '@/assets/dexscreener.svg'
 import { useFactoryPoolCreated } from '@/data/uniswapv3-factory'
+import { usePairInfo } from '@/data/use-pair-info.hook'
 
 const TokenElement: FC<{ address: Address }> = ({ address }) => {
   const { data, isLoading } = useToken({
@@ -36,6 +37,8 @@ interface PoolElementProps {
 }
 
 const PoolElement: FC<PoolElementProps> = ({ pool, token0, token1 }) => {
+  const { data: dataPair, isLoading: isLoadingPair } = usePairInfo(pool)
+
   return (
     <div className="flex flex-col gap-2 p-2 bg-gray-600 rounded-md">
       <Text fz="md" className="flex flex-row justify-center flex-shrink gap-2">
@@ -51,7 +54,7 @@ const PoolElement: FC<PoolElementProps> = ({ pool, token0, token1 }) => {
         >
           <img src={dexScreener} width="24" height="24" />
         </Anchor>
-        <div>Mktcap</div>
+        {dataPair != null && <div>Mktcap: {dataPair.pair?.liquidity.usd}</div>}
       </div>
     </div>
   )
@@ -60,18 +63,11 @@ const PoolElement: FC<PoolElementProps> = ({ pool, token0, token1 }) => {
 interface NewListingsProps {}
 
 export const NewListings = () => {
-  // useUniswapV3FactoryPoolCreatedEvent({
-  //   listener: (event) => {
-  //     console.log(event)
-  //   },
-  //   chainId: arbitrum.id,
-  // })
-
   const { data, isLoading, isFetched } = useFactoryPoolCreated()
-  console.log({ data })
 
   return (
-    <div className="grid grid-cols-2 gap-3 lg:grid-cols-5 md:grid-cols-3">
+    <div className="grid grid-cols-2 gap-3 place-content-around lg:grid-cols-5 md:grid-cols-3">
+      {isLoading && <Skeleton height="280px" width="320px" radius="sm" />}
       {isFetched &&
         data!.map((pool) => (
           <div key={pool.transactionHash}>

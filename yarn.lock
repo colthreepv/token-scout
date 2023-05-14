@@ -1906,7 +1906,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-sync-storage-persister@npm:^4.27.1":
+"@tanstack/query-sync-storage-persister@npm:^4.27.1, @tanstack/query-sync-storage-persister@npm:^4.29.5":
   version: 4.29.5
   resolution: "@tanstack/query-sync-storage-persister@npm:4.29.5"
   dependencies:
@@ -1915,7 +1915,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-query-persist-client@npm:^4.28.0":
+"@tanstack/react-query-persist-client@npm:^4.28.0, @tanstack/react-query-persist-client@npm:^4.29.5":
   version: 4.29.5
   resolution: "@tanstack/react-query-persist-client@npm:4.29.5"
   dependencies:
@@ -1926,7 +1926,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:^4.28.0":
+"@tanstack/react-query@npm:^4.28.0, @tanstack/react-query@npm:^4.29.5":
   version: 4.29.5
   resolution: "@tanstack/react-query@npm:4.29.5"
   dependencies:
@@ -8076,6 +8076,9 @@ __metadata:
     "@emotion/react": ^11.11.0
     "@mantine/core": ^6.0.10
     "@mantine/hooks": ^6.0.10
+    "@tanstack/query-sync-storage-persister": ^4.29.5
+    "@tanstack/react-query": ^4.29.5
+    "@tanstack/react-query-persist-client": ^4.29.5
     "@trivago/prettier-plugin-sort-imports": ^4.1.1
     "@types/node": ^20.1.4
     "@types/react": ^18.0.28

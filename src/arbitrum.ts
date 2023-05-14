@@ -1,4 +1,4 @@
-export default [
+export const rpcs = [
   'https://arb1.arbitrum.io/rpc',
   'https://arb1.croswap.com/rpc', // eth_getFilterLogs supported
   'https://rpc.ankr.com/arbitrum',
@@ -10,3 +10,5 @@ export default [
   'https://arb-mainnet-public.unifra.io',
   'https://arbitrum.api.onfinality.io/public',
 ]
+
+export const WETH_ADDRESS = '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1'

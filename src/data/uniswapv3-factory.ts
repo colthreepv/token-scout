@@ -3,6 +3,8 @@ import { type PublicClient } from '@wagmi/core'
 import { useBlockNumber, usePublicClient } from 'wagmi'
 import { arbitrum } from 'wagmi/chains'
 
+import { WETH_ADDRESS } from '@/arbitrum'
+
 import { uniswapV3FactoryABI, uniswapV3FactoryAddress } from '../contracts'
 
 const arbitrumAvgBlockTime = 0.26
@@ -20,10 +22,17 @@ const getEvents = async (client: PublicClient, blockNumber: bigint) => {
     abi: uniswapV3FactoryABI,
     address: uniswapV3FactoryAddress[arbitrum.id],
     eventName: 'PoolCreated',
-    fromBlock: estimateArbitrumBlock(24, blockNumber),
+    fromBlock: estimateArbitrumBlock(48, blockNumber),
   })
 
-  return await client.getFilterLogs({ filter })
+  const logs = await client.getFilterLogs({ filter })
+
+  // only return WETH pairs
+  const filteredLogs = logs.filter(
+    (log) =>
+      log.args.token0 === WETH_ADDRESS || log.args.token1 === WETH_ADDRESS,
+  )
+  return filteredLogs
 }
 
 export const useFactoryPoolCreated = () => {

@@ -3,17 +3,17 @@ import { type Chain, configureChains, createConfig } from 'wagmi'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 
-import networks from './networks'
+import { rpcs } from './arbitrum'
 
 const arbitrumCustom: Chain = {
   ...arbitrum,
   rpcUrls: {
     ...arbitrum.rpcUrls,
     default: {
-      http: networks,
+      http: rpcs,
     },
     public: {
-      http: networks,
+      http: rpcs,
     },
   },
 }
