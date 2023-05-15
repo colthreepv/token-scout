@@ -9,7 +9,9 @@ import { uiExplorer } from '@/data/etherscan.fetch'
 import { useFactoryPoolCreated } from '@/data/uniswapv3-factory'
 import { usePairInfo } from '@/data/use-pair-info.hook'
 import { type ValidChainId } from '@/networks/tokens'
-import { timestampAgo } from '@/utils/numers.util'
+import { timestampAgo } from '@/utils/numbers.util'
+
+import { chainIcons } from './icons'
 
 const TokenElement: FC<{ address: Address; chainId: ValidChainId }> = ({
   address,
@@ -33,11 +35,6 @@ const TokenElement: FC<{ address: Address; chainId: ValidChainId }> = ({
     </>
   )
 }
-
-const chainIcons = new Map<number, string>([
-  [arbitrum.id, 'https://dd.dexscreener.com/ds-data/chains/arbitrum.png'],
-  [bsc.id, 'https://dd.dexscreener.com/ds-data/chains/bsc.png'],
-])
 
 interface PoolElementProps {
   fee: number

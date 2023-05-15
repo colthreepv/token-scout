@@ -40,7 +40,7 @@ const storeLastBlockByChainId = (chainId: number, block: bigint) => {
   const key = `${CREATED_POOLS_LAST_BLOCK_KEY}:${chainId}`
   localStorage.setItem(key, block.toString())
 }
-const getLastBlockByChainId = (chainId: number): bigint | null => {
+export const getLastBlockByChainId = (chainId: number): bigint | null => {
   const key = `${CREATED_POOLS_LAST_BLOCK_KEY}:${chainId}`
   const value = localStorage.getItem(key)
   if (value == null) return null

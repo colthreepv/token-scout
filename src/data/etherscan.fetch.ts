@@ -8,6 +8,19 @@ interface BlockByTimestampResponse {
   result: string
 }
 
+interface BlockRewardsByBlockResponse {
+  status: string
+  message: string
+  result: {
+    blockNumber: string
+    timeStamp: string
+    blockMiner: string
+    blockReward: string
+    uncles: any[]
+    uncleInclusionReward: string
+  }
+}
+
 const createComputation = <T>(fn: () => Promise<T>) => {
   let promise: Promise<T> | null = null
 
@@ -44,6 +57,24 @@ export const getBlockByTimestamp = async (
   }
 
   return data.result
+}
+
+export const getBlockRewardsByBlock = async (
+  blockNumber: bigint,
+  chainId: ValidChainId,
+) => {
+  const baseUrl = urlsByChainId.get(chainId)!
+  const url = `${baseUrl}?module=block&action=getblockreward&blockno=${blockNumber}`
+  const response = await fetch(url)
+  const data = (await response.json()) as BlockRewardsByBlockResponse
+  if (data.status !== '1') {
+    throw new Error(data.message)
+  }
+  if (data.result.timeStamp == null) {
+    throw new Error('Missing timestamp')
+  }
+
+  return Number(data.result.timeStamp)
 }
 
 const prefixByChainId = new Map<ValidChainId, string>([
