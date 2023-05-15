@@ -1,12 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import { type Address, type PublicClient } from '@wagmi/core'
 import { useBlockNumber, usePublicClient } from 'wagmi'
-import { arbitrum } from 'wagmi/chains'
 
-import { WETH_ADDRESS } from '@/arbitrum'
+import { type ValidChainId, tokenWhitelist } from '@/networks/tokens'
 
 import { uniswapV3FactoryABI, uniswapV3FactoryAddress } from '../contracts'
-import { estimateArbitrumBlockCached } from './arbiscan.fetch'
+import { estimateBlock } from './etherscan.fetch'
 
 export interface SimplifiedLog {
   address: Address
@@ -60,14 +59,18 @@ const getLogsByChainId = <T>(chainId: number): T[] | null => {
   return JSON.parse(value)
 }
 
-const getEvents = async (client: PublicClient, currentBlock: bigint) => {
-  const lastBlock = getLastBlockByChainId(arbitrum.id)
+const getEvents = async (
+  client: PublicClient,
+  currentBlock: bigint,
+  chainId: ValidChainId,
+) => {
+  const lastBlock = getLastBlockByChainId(chainId)
   const fromBlock =
-    lastBlock != null ? lastBlock : await estimateArbitrumBlockCached()
+    lastBlock != null ? lastBlock : await estimateBlock[chainId]()
 
   const filter = await client.createContractEventFilter({
     abi: uniswapV3FactoryABI,
-    address: uniswapV3FactoryAddress[arbitrum.id],
+    address: uniswapV3FactoryAddress[chainId],
     eventName: 'PoolCreated',
     fromBlock,
     toBlock: currentBlock,
@@ -77,38 +80,39 @@ const getEvents = async (client: PublicClient, currentBlock: bigint) => {
 
   // only return WETH pairs
   // FIXME: make this generic for BSC
-  const filteredLogs = logs.filter(
-    (log) =>
-      log.args.token0 === WETH_ADDRESS || log.args.token1 === WETH_ADDRESS,
-  )
+  const filteredLogs = logs.filter((log) => {
+    const whiteList = tokenWhitelist[chainId]
+    return (
+      whiteList.includes(log.args.token0) || whiteList.includes(log.args.token1)
+    )
+  })
 
   const simplifiedLogs = toSimplifiedLog(filteredLogs)
-  console.log(`fetched ${simplifiedLogs.length} new logs`)
+  console.log(`fetched ${simplifiedLogs.length} new logs`, chainId)
 
   // now join with previously stored logs!
-  const storedLogs = getLogsByChainId<SimplifiedLog>(arbitrum.id)
+  const storedLogs = getLogsByChainId<SimplifiedLog>(chainId)
   const allLogs =
     storedLogs != null ? [...simplifiedLogs, ...storedLogs] : simplifiedLogs
 
   // also store all the logs
-  storeLogsByChainId(arbitrum.id, allLogs)
+  storeLogsByChainId(chainId, allLogs)
   // cool. now store currentBlock in localStorage, so we can use it next time
-  storeLastBlockByChainId(arbitrum.id, currentBlock)
+  storeLastBlockByChainId(chainId, currentBlock)
 
   return {
     logs: allLogs,
     blockNumber: Number(currentBlock),
-    chainId: client.chain.id,
   }
 }
 
-export const useFactoryPoolCreated = (chainId: number) => {
-  const client = usePublicClient()
-  const { data: blockNumber } = useBlockNumber()
+export const useFactoryPoolCreated = (chainId: ValidChainId) => {
+  const client = usePublicClient({ chainId })
+  const { data: blockNumber } = useBlockNumber({ chainId })
 
   return useQuery({
-    queryKey: ['factory-pools'],
-    queryFn: async () => await getEvents(client, blockNumber!),
+    queryKey: ['factory-pools', chainId],
+    queryFn: async () => await getEvents(client, blockNumber!, chainId),
     enabled: blockNumber != null,
     staleTime: 1000 * 60 * 10, // 10 minutes
   })
