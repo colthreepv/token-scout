@@ -102,7 +102,7 @@ const estimateArbitrumBlockCached = createComputation<bigint>(
 )
 
 const estimateBscBlockCached = createComputation<bigint>(
-  async () => await internalEstimateBlock(48, bsc.id),
+  async () => await internalEstimateBlock(24, bsc.id),
 )
 
 export const estimateBlock: Record<ValidChainId, () => Promise<bigint>> = {
