@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import type { Address } from 'wagmi'
 
-import { WETH_ADDRESS } from '@/arbitrum'
+import { WETH_ADDRESS } from '@/networks/arbitrum'
 
 export type CoingeckoSimpleTokenPrice = Record<Address, { usd: number }>
 
