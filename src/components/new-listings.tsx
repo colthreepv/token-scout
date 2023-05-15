@@ -88,7 +88,7 @@ const PoolElement: FC<PoolElementProps> = ({
           <img src={dexScreener} width="24" height="24" />
         </Anchor>
         {dataPair != null && (
-          <div>Liquidity: {format(dataPair.pair?.liquidity.usd, '0.00a')}</div>
+          <div>Liquidity: {format(dataPair.pair?.liquidity?.usd, '0.00a')}</div>
         )}
       </div>
 
@@ -110,13 +110,13 @@ export const NewListings = () => {
   const {
     data: arbitrumData,
     isLoading: isLoadingArbitrum,
-    isFetched: isFetchedArbitrum,
+    isSuccess: isSuccessArbitrum,
   } = useFactoryPoolCreated(arbitrum.id)
 
   const {
     data: bscData,
     isLoading: isLoadingBsc,
-    isFetched: isFetchedBsc,
+    isSuccess: isSuccessBsc,
   } = useFactoryPoolCreated(bsc.id)
 
   const isLoading = isLoadingBsc || isLoadingArbitrum
@@ -132,8 +132,8 @@ export const NewListings = () => {
           <Skeleton width="160px" height="80px" radius="sm" />
         </>
       )}
-      {isFetchedArbitrum &&
-        arbitrumData!.logs.map((pool) => (
+      {isSuccessArbitrum &&
+        arbitrumData.logs.map((pool) => (
           <PoolElement
             {...pool.args}
             blockNumber={pool.blockNumber}
@@ -141,8 +141,8 @@ export const NewListings = () => {
             key={pool.transactionHash}
           />
         ))}
-      {isFetchedBsc &&
-        bscData!.logs.map((pool) => (
+      {isSuccessBsc &&
+        bscData.logs.map((pool) => (
           <PoolElement
             {...pool.args}
             blockNumber={pool.blockNumber}
